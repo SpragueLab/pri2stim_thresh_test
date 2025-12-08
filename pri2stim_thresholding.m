@@ -659,6 +659,34 @@ try
         % Log correctness in staircase history (cumulative)
         stair.isCorrect(end+1,1) = p.correct(t);
 
+        %----------------- UPDATE STAIRCASE (3-down 1-up) -----------------
+        % Treat misses (NaN) as incorrect here; change if you want them ignored.
+        if isnan(p.correct(t))
+            isCorr = 0;
+        else
+            isCorr = p.correct(t);
+        end
+
+        if isCorr == 1
+            % correct trial
+            stair.consecCorrect = stair.consecCorrect + 1;
+
+            % 3-down 1-up rule: after 3 consecutive correct -> harder (lower coh)
+            if stair.consecCorrect >= 3
+                stair.currLogCoh   = stair.currLogCoh - stair.stepLog;
+                stair.consecCorrect = 0;  % reset streak
+            end
+
+        elseif isCorr == 0
+            % incorrect or miss -> easier (higher coh), reset streak
+            stair.consecCorrect = 0;
+            stair.currLogCoh   = stair.currLogCoh + stair.stepLog;
+        end
+
+        % Clamp within allowed log-coherence range
+        stair.currLogCoh = min(max(stair.currLogCoh, stair.minLogCoh), stair.maxLogCoh);
+
+
         %----------------- FEEDBACK (200 ms) -----------------
         if isnan(p.correct(t))
             fbColor = [255 255 0]; % yellow for miss

@@ -908,8 +908,13 @@ for ii = 1:2
     bxy = bxy(:,1:p.nLines);
 
     dxyb = nan(2, 2*p.nLines);
+    
+    % random orientation for all lines
+    %     ba = rand(1,p.nLines)*360;
+    ba = linspace(180/p.nLines, 180, p.nLines);
+    ba = ba(randperm(p.nLines));  % shuffle so coherent subset is spatially random
 
-    ba = rand(1,p.nLines)*360;
+    % base radial angle
     ra = rad2deg(atan2(-1*bxy(2,1:p.nLines), bxy(1,1:p.nLines)));
 
     n_coh  = round(coh * p.nLines);

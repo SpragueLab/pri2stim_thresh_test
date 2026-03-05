@@ -1,3 +1,24 @@
+% pri2stim_testing.m
+%
+% Psychophysics version of pri2stimEEG_static: testing phase.
+% Uses coherence threshold estimated by pri2stim_thresholding +
+% pri2stim_computeThreshold.
+%
+% QUESTION: how does focal vs. distributed attention modulate spiral
+% direction discrimination at threshold coherence?
+%
+% STIMULUS: briefly present 2 spiralpattern stimuli (100ms) at
+% left/right of screen. Attention cued as neutral (20%), valid (60%),
+% or invalid (20%) across trials.
+%
+% adapted from pri2stimEEG_static.m
+%
+% RESPONSE:
+% - which direction did the cued spiral cohere? (1: CCW, 2: CW)
+%
+% AHH 3/5/2026
+
+
 function pri2stim_testing
 try
 
@@ -908,7 +929,7 @@ for ii = 1:2
     bxy = bxy(:,1:p.nLines);
 
     dxyb = nan(2, 2*p.nLines);
-    
+
     % random orientation for all lines
     %     ba = rand(1,p.nLines)*360;
     ba = linspace(180/p.nLines, 180, p.nLines);

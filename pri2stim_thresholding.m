@@ -1,3 +1,22 @@
+% pri2stim_thresholding.m
+%
+% Psychophysics version of pri2stimEEG_static: thresholding phase.
+% Estimates coherence threshold via 3-down-1-up staircase.
+%
+% QUESTION: what coherence level yields ~82% correct on the spiral
+% direction discrimination task?
+%
+% STIMULUS: briefly present 2 spiral stimuli (100ms) at
+% left/right of screen. Neutral/distributed attention on all trials.
+%
+% adapted from pri2stimEEG_static.m
+%
+% RESPONSE:
+% - which direction did the cued spiral cohere? (1: CCW, 2: CW)
+%
+% AHH 3/5/2026
+
+
 function pri2stim_thresholding
 try
 

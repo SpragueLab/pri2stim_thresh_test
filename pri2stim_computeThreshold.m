@@ -8,6 +8,9 @@ function pri2stim_computeThreshold(subName, sessionNum, method)
 % Usage examples:
 %   pri2stim_computeThreshold('subXXX', 1);
 %   pri2stim_computeThreshold('subXXX', 1, 'palamedes');
+%
+% add palamedes to path:
+%   workstation: addpath(genpath('C:\Users\aharrison\Documents\MATLAB\Palamedes1_11_13\Palamedes'))
 
 if nargin < 3 || isempty(method)
     method = 'median';

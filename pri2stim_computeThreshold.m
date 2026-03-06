@@ -11,6 +11,7 @@ function pri2stim_computeThreshold(subName, sessionNum, method)
 %
 % add palamedes to path:
 %   workstation: addpath(genpath('C:\Users\aharrison\Documents\MATLAB\Palamedes1_11_13\Palamedes'))
+%   EEG: addpath(genpath('C:\Users\tcs-labra\Documents\MATLAB\Palamedes1_11_13\Palamedes'));
 
 if nargin < 3 || isempty(method)
     method = 'median';

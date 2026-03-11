@@ -829,7 +829,7 @@ try
 
     Screen('FillRect',w,p.backColor);
 
-    str_acc = sprintf('Overall accuracy: %.2f%%', p.accuracy);
+    str_acc = sprintf('Overall accuracy: %.2f%%. Press SPACE to end the block.', p.accuracy);
 
     tCenterAcc = [fixcenter(1)-RectWidth(Screen('TextBounds', w, str_acc))/2, ...
         fixcenter(2)-200];

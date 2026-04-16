@@ -1,4 +1,4 @@
-% pri2stim_thresholding.m
+ % pri2stim_thresholding.m
 %
 % Psychophysics version of pri2stimEEG_static: thresholding phase.
 % Estimates coherence threshold via 3-down-1-up staircase.
@@ -50,7 +50,7 @@ try
         'Practice mode? (0=no, 1=yes)', ...
         'Number of trials (thresholding)'};
     s = round(sum(100*clock));
-    defAns = {'subXXX','1','X','.01','1','3','0',num2str(s),'0','60'};
+    defAns = {'subXXX','1','X','.01','1','1','0',num2str(s),'0','60'};
     box = inputdlg(prompt,'Enter Subject Information...', 1, defAns);
 
     if length(box)==length(defAns)

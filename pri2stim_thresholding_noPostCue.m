@@ -11,7 +11,7 @@ function pri2stim_thresholding_noPostCue
 %   1 = top-left tilt (\)
 %   2 = top-right tilt (/)
 %
-% AHH 2025 – derived from pri2stim_thresholding.m
+% AHH 2026 – derived from pri2stim_thresholding.m
 
 try
 
@@ -472,7 +472,9 @@ try
         end
 
         % --- assign attention condition and target side ---
-        p.attnCond(t)   = randsample([p.ATTN_VALID p.ATTN_NEUTRAL],1);
+        % Thresholding is neutral-only: cue both sides every trial,
+        % target side random. Matches pri2stim_thresholding.m.
+        p.attnCond(t)   = p.ATTN_NEUTRAL;
         p.targetSide(t) = randi([1 2]); % 1=left, 2=right
 
         % --- assign coherence for this trial (from staircase) ---
@@ -529,13 +531,8 @@ try
 
             Screen('FillRect',w,p.backColor);
 
-            if p.attnCond(t) == p.ATTN_VALID
-                % cue only target side
-                drawPreCueSide(w,p,fixcenter,mywhite,p.targetSide(t));
-            else
-                % neutral: cue both sides
-                drawPreCueBoth(w,p,fixcenter,mywhite);
-            end
+            % neutral-only: always cue both sides
+            drawPreCueBoth(w,p,fixcenter,mywhite);
 
             drawFixationNoClear(w,p,fixcenter);
             Screen('Flip',w);
@@ -569,35 +566,36 @@ try
         stimGeom = makeStaticStimulusGeometry(p, cohPerSide, ...
                                               p.stimDir1(t), p.stimDir2(t));
 
+        % Response window opens at stimulus onset (no post-stim ISI)
+        respKey    = NaN;
+        respTime   = NaN;
+        tStimOn    = GetSecs;
+
         for f = 1:nStimFrames
-            [resp, ~] = checkForResp([], p.escape);
+            [resp, timeStamp] = checkForResp(p.keys, p.escape);
             if resp == -1
                 p.aborted = 1;
                 save(fName,'p','stair');
                 cleanupAndExit(w,p); return;
             end
-
+            % Accept response during stimulus if not yet received
+            if isnan(respKey) && ~isempty(resp) && resp ~= 0
+                if resp == p.key1
+                    respKey  = 1;
+                    respTime = timeStamp;
+                elseif resp == p.key2
+                    respKey  = 2;
+                    respTime = timeStamp;
+                end
+            end
             drawStimulusStaticFromGeom(w, p, fixcenter, stimGeom);
             Screen('Flip', w);
         end
 
-        %----------------- ISI (STIM --> RESPONSE) -----------------
-        tPostISIOn = GetSecs;
-        while GetSecs < tPostISIOn + p.postISIDur
-            [resp, ~] = checkForResp([],p.escape);
-            if resp == -1
-                p.aborted = 1;
-                save(fName,'p','stair');
-                cleanupAndExit(w,p); return;
-            end
-            drawFixation(w,p,fixcenter);
-            Screen('Flip',w);
-        end
-
-        %----------------- RESPONSE (SELF-PACED) -----------------
-        respKey    = NaN;
-        respTime   = NaN;
-        tRespStart = GetSecs;
+        %----------------- RESPONSE (SELF-PACED, from stimulus onset) -----------------
+        % No post-stim ISI: response window already open since stimulus onset.
+        % If subject responded during stimulus frames, respKey is already set.
+        tRespStart = tStimOn;
 
         while isnan(respKey)
             [resp, timeStamp] = checkForResp(p.keys, p.escape);
@@ -961,8 +959,10 @@ for ii = 1:2
 
     dxyb = nan(2, 2*p.nLines);
 
-    % random orientation for all lines
-    ba = rand(1,p.nLines)*360;
+    % Uniformly distributed baseline orientations (consistent with EEG version
+    % and all other scripts in this paradigm)
+    ba = linspace(180/p.nLines, 180, p.nLines);
+    ba = ba(randperm(p.nLines));  % shuffle so coherent subset is spatially random
 
     % base radial angle
     ra = rad2deg(atan2(-1*bxy(2,1:p.nLines), bxy(1,1:p.nLines)));

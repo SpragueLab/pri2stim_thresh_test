@@ -1,18 +1,17 @@
-function pri2stim_computeThreshold(subName, sessionNum, method, exptName)
-% pri2stim_computeThreshold(subName, sessionNum, [method], [exptName])
+function pri2stim_computeThreshold(subName, sessionNum, method, paradigm)
+% pri2stim_computeThreshold(subName, sessionNum, [method], [paradigm])
 %
 % method:
 %   'median'    -> median of last 30 (or fewer) valid trials (default)
 %   'palamedes' -> Weibull PF fit using Palamedes toolbox (~82% correct)
 %
-% exptName:
-%   'pri2stimEEG_threshold'           -> original postcued thresholding (default)
-%   'pri2stimEEG_threshold_noPostCue' -> no-postcue thresholding
+% paradigm (short tag selecting which thresholding script was run):
+%   'postcue'   -> pri2stim_thresholding.m           (default)
+%   'noPostCue' -> pri2stim_thresholding_noPostCue.m
 %
 % Usage examples:
-%   pri2stim_computeThreshold('subXXX', 1);
-%   pri2stim_computeThreshold('subXXX', 1, 'palamedes'); <-- USE THIS FOR ORIGINAL VERSION!!
-%   pri2stim_computeThreshold('subXXX', 1, 'palamedes', 'pri2stimEEG_threshold_noPostCue'); <-- USE THIS FOR POSTCUED VERSION!!
+%   pri2stim_computeThreshold('subXXX', 1, 'palamedes');              % postcued (default)
+%   pri2stim_computeThreshold('subXXX', 1, 'palamedes', 'noPostCue'); % no-postcue 
 %
 % add palamedes to path:
 %   workstation: addpath(genpath('C:\Users\aharrison\Documents\MATLAB\Palamedes1_11_13\Palamedes'))
@@ -22,8 +21,18 @@ if nargin < 3 || isempty(method)
     method = 'median';
 end
 
-if nargin < 4 || isempty(exptName)
-    exptName = 'pri2stimEEG_threshold';
+if nargin < 4 || isempty(paradigm)
+    paradigm = 'postcue';
+end
+
+% Map short tag -> full experiment name used in file naming
+switch lower(paradigm)
+    case 'postcue'
+        exptName = 'pri2stimEEG_threshold';
+    case 'nopostcue'
+        exptName = 'pri2stimEEG_threshold_noPostCue';
+    otherwise
+        error('Unknown paradigm ''%s''. Use ''postcue'' or ''noPostCue''.', paradigm);
 end
 
 % ------------------------------------------------------------

@@ -1,13 +1,18 @@
-function pri2stim_computeThreshold(subName, sessionNum, method)
-% pri2stim_computeThreshold(subName, sessionNum, [method])
+function pri2stim_computeThreshold(subName, sessionNum, method, exptName)
+% pri2stim_computeThreshold(subName, sessionNum, [method], [exptName])
 %
 % method:
 %   'median'    -> median of last 30 (or fewer) valid trials (default)
 %   'palamedes' -> Weibull PF fit using Palamedes toolbox (~82% correct)
 %
+% exptName:
+%   'pri2stimEEG_threshold'           -> original postcued thresholding (default)
+%   'pri2stimEEG_threshold_noPostCue' -> no-postcue thresholding
+%
 % Usage examples:
 %   pri2stim_computeThreshold('subXXX', 1);
-%   pri2stim_computeThreshold('subXXX', 1, 'palamedes'); <-- USE THIS!!
+%   pri2stim_computeThreshold('subXXX', 1, 'palamedes'); <-- USE THIS FOR ORIGINAL VERSION!!
+%   pri2stim_computeThreshold('subXXX', 1, 'palamedes', 'pri2stimEEG_threshold_noPostCue'); <-- USE THIS FOR POSTCUED VERSION!!
 %
 % add palamedes to path:
 %   workstation: addpath(genpath('C:\Users\aharrison\Documents\MATLAB\Palamedes1_11_13\Palamedes'))
@@ -17,6 +22,10 @@ if nargin < 3 || isempty(method)
     method = 'median';
 end
 
+if nargin < 4 || isempty(exptName)
+    exptName = 'pri2stimEEG_threshold';
+end
+
 % ------------------------------------------------------------
 % Locate data directory and staircase file
 % ------------------------------------------------------------
@@ -24,8 +33,6 @@ tmpf = mfilename('fullpath');
 tmpi = strfind(tmpf, filesep);
 root = tmpf(1:tmpi(end));
 dataDir = fullfile(root, 'data', 'thresholding');
-
-exptName = 'pri2stimEEG_threshold';
 
 stairStateFile = fullfile(dataDir, ...
     sprintf('%s_%s_sess%02d_stair.mat', subName, exptName, sessionNum));

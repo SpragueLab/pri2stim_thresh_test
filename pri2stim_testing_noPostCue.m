@@ -27,7 +27,7 @@
 % AHH 5/2026
 
 
-function pri2stim_testing_1targ
+function pri2stim_testing_noPostCue
 try
 
     KbName('UnifyKeyNames');
@@ -38,7 +38,7 @@ try
     p.root = tmpf(1:tmpi(end));
 
     % data directories
-    p.root_data_test   = fullfile(p.root, 'data', 'testing_1targ');
+    p.root_data_test   = fullfile(p.root, 'data', 'testing_noPostCue');
     p.root_data_thresh = fullfile(p.root, 'data', 'thresholding');
 
     % create directories if needed
@@ -80,13 +80,13 @@ try
     end
 
     % Experiment name
-    p.exptName = 'pri2stimEEG_testing_1targ';
+    p.exptName = 'pri2stimEEG_testing_noPostCue';
 
     %-----------------------------
     % LOAD / SET TARGET COHERENCE
     %-----------------------------
     if isnan(targCoh_in) || targCoh_in <= 0
-        exptThreshName = 'pri2stimEEG_threshold';
+        exptThreshName = 'pri2stimEEG_threshold_noPostCue';
         threshFile = fullfile(p.root_data_thresh, ...
             sprintf('%s_%s_sess%02d_thresh.mat', ...
             p.subName, exptThreshName, p.sessionNum));
@@ -429,7 +429,7 @@ try
     %-----------------------------
     if p.eyeTracking == 1
         try
-            Eyelink('Message','EXPT_START TESTING_1TARG');
+            Eyelink('Message','EXPT_START TESTING_NOPOSTCUE');
             Eyelink('Message','xDAT %i',10);
             Eyelink('StartRecording');
             p.eye_used = Eyelink('EyeAvailable');

@@ -37,9 +37,8 @@ subject_id   = 'ALL';          % <-- change this if you want just one subject
 %   'testing'
 %   'threshold'
 %   'threshold_practice'
-% whichDataset = 'threshold_practice';
-% whichDataset = 'threshold';
 whichDataset = 'testing';
+% whichDataset = 'threshold';
 
 
 %% ------------------------------------------------------------------------
